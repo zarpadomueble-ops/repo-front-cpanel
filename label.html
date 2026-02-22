@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Label Images</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        img {
+            max-width: 100%;
+            height: 200px;
+            object-fit: contain;
+        }
+
+        input {
+            margin-top: 5px;
+            padding: 5px;
+        }
+
+        #save {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 30px;
+            font-size: 20px;
+            background: blue;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Label Images</h1>
+    <div class="grid" id="grid"></div>
+    <button id="save" onclick="saveData()">SAVE JSON</button>
+
+    <script>
+        const images = [
+            "006-chatgpt-image-20-feb-2026-08-35-42-p-m.webp",
+            "008-chatgpt-image-20-feb-2026-08-36-00-p-m.webp",
+            "016-chatgpt-image-20-feb-2026-08-58-19-p-m.webp",
+            "035-chatgpt-image-20-feb-2026-21-14-48.webp",
+            "050-escritorio_gamer.webp"
+        ];
+
+        const grid = document.getElementById('grid');
+        images.forEach(img => {
+            grid.innerHTML += `
+                <div class="card">
+                    <img src="/Assets/Assets_pc/x/${img}" alt="img">
+                    <p>${img}</p>
+                    <input type="text" id="name_${img}" placeholder="Name (e.g. Silla de Madera)">
+                    <input type="text" id="spec_${img}" placeholder="Specs (e.g. Patas de hierro, estilo moderno)">
+                </div>
+            `;
+        });
+
+        async function saveData() {
+            const data = {};
+            images.forEach(img => {
+                const name = document.getElementById(`name_${img}`).value;
+                const spec = document.getElementById(`spec_${img}`).value;
+                if (name || spec) {
+                    data[img] = { name, spec };
+                }
+            });
+
+            await fetch('http://localhost:8001/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            alert('Saved successfully!');
+        }
+    </script>
+</body>
+
+</html>

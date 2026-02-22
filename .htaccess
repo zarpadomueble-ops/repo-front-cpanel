@@ -1,0 +1,64 @@
+
+Options -MultiViews
+DirectoryIndex index.html
+
+RewriteEngine On
+
+# ----------------------------------------------------------------------
+# 1. CANONICAL REDIRECT (HTTPS + WWW)
+# Force https://www.zarpadomueble.com
+# ----------------------------------------------------------------------
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^ https://www.zarpadomueble.com%{REQUEST_URI} [L,R=301,NE]
+
+# ----------------------------------------------------------------------
+# 2. EXISTING FILES/FOLDERS
+# Do not rewrite if the file or directory exists
+# ----------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ----------------------------------------------------------------------
+# 3. LEGACY COMPATIBILITY
+# Redirect /pages/... to root or specific folders
+# ----------------------------------------------------------------------
+RewriteRule ^pages/(css|js|assets|Assets|img|partials|admin-finanzas)/(.*)$ /$1/$2 [L,NC,QSA]
+RewriteRule ^pages/?$ / [L,NC,QSA]
+RewriteRule ^pages/(.+?)/?$ /$1 [L,NC,QSA]
+
+# ----------------------------------------------------------------------
+# 4. CLEAN URLS
+# /ruta -> /ruta.html (if exists)
+# ----------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^(.+?)/?$ /$1.html [L,NC,QSA]
+
+# ----------------------------------------------------------------------
+# 5. CACHE CONTROL & COMPRESSION
+# ----------------------------------------------------------------------
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 2 days"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|webp|js|css|swf|woff|woff2)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+    <FilesMatch "\.(html|htm|xml|txt|xsl)$">
+        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+    </FilesMatch>
+</IfModule>

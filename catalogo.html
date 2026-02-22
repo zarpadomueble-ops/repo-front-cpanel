@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=/tienda">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo | Zarpado Mueble</title>
+    <link rel="canonical" href="https://zarpadomueble.com/catalogo">
+    <link rel="icon" href="/Assets/favicon/favicon.ico">
+    <link rel="apple-touch-icon" href="/Assets/favicon/favicon.ico">
+    <meta name="theme-color" content="#000000">
+    <script>
+        (function redirectLegacyCatalog() {
+            var query = window.location.search || '';
+            var hash = window.location.hash || '';
+            window.location.replace('/tienda' + query + hash);
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- WP: header.php aquí -->
+    <p>Redirigiendo a <a href="/tienda">Tienda</a>...</p>
+    <!-- WP: footer.php aquí -->
+</body>
+
+</html>

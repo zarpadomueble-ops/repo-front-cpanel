@@ -1,0 +1,36 @@
+<!-- Referencia de migración: usar este bloque como base para header.php -->
+<header class="navbar">
+    <div class="container navbar-container">
+        <a href="/" class="logo" aria-label="Zarpado Mueble - Inicio">
+            <img
+                class="logo-dinamico"
+                src="/Assets/favicon/android-chrome-192x192blanco.png"
+                data-logo-light="/Assets/favicon/android-chrome-192x192.png"
+                data-logo-dark="/Assets/favicon/android-chrome-192x192blanco.png"
+                alt="Zarpado Mueble"
+            >
+        </a>
+
+        <nav id="primary-navigation" class="nav-menu" aria-label="Menu principal">
+            <ul>
+                <li><a href="/" class="nav-link">Inicio</a></li>
+                <li><a href="/tienda" class="nav-link">Tienda</a></li>
+                <li><a href="/a-medida" class="nav-link">A Medida</a></li>
+                <li><a href="/nosotros" class="nav-link">Nosotros</a></li>
+                <li><a href="/contacto" class="btn-nav">Contacto</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-icons">
+            <button class="cart-icon js-toggle-cart" type="button" aria-label="Abrir carrito" aria-expanded="false" aria-controls="cartSidebar">
+                <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                <span class="cart-count">0</span>
+            </button>
+            <button class="hamburger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="primary-navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </div>
+</header>

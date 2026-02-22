@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Finanzas</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Panel privado de finanzas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Manrope:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css?v=202602221329">
+</head>
+
+<body class="af-app-body">
+  <div class="af-shell">
+    <aside class="af-sidebar">
+      <div>
+        <p class="af-sidebar-kicker">Privado</p>
+        <h1>Admin Finanzas</h1>
+      </div>
+
+      <nav class="af-nav" aria-label="Secciones">
+        <button type="button" class="af-nav-btn is-active" data-view="dashboard">Dashboard</button>
+        <button type="button" class="af-nav-btn" data-view="movimientos">Movimientos</button>
+        <button type="button" class="af-nav-btn" data-view="clientes">Clientes</button>
+        <button type="button" class="af-nav-btn" data-view="categorias">Categorías</button>
+        <button type="button" class="af-nav-btn" data-view="import-export">Import / Export</button>
+        <button type="button" class="af-nav-btn" data-view="ajustes">Ajustes</button>
+      </nav>
+
+      <button type="button" id="logout-btn" class="af-ghost-btn">Cerrar sesión</button>
+    </aside>
+
+    <div class="af-main">
+      <header class="af-topbar">
+        <div class="af-search-wrap">
+          <label for="global-search" class="af-sr-only">Buscar</label>
+          <input id="global-search" type="search" placeholder="Buscar detalle, cliente, método...">
+        </div>
+
+        <div class="af-filter-wrap">
+          <label>
+            Desde
+            <input id="filter-from" type="date">
+          </label>
+          <label>
+            Hasta
+            <input id="filter-to" type="date">
+          </label>
+          <label>
+            Cliente
+            <select id="filter-customer">
+              <option value="">Todos</option>
+            </select>
+          </label>
+          <label>
+            Tipo
+            <select id="filter-type">
+              <option value="">Todos</option>
+              <option value="income">Ingreso</option>
+              <option value="expense">Egreso</option>
+            </select>
+          </label>
+          <label>
+            Categoría
+            <select id="filter-category">
+              <option value="">Todas</option>
+            </select>
+          </label>
+          <button type="button" id="apply-filters-btn">Aplicar</button>
+          <button type="button" id="clear-filters-btn" class="af-ghost-btn">Limpiar</button>
+        </div>
+      </header>
+
+      <main class="af-content">
+        <section id="view-dashboard" class="af-view is-active" data-view="dashboard">
+          <div id="dashboard-kpis" class="af-kpi-grid"></div>
+          <div class="af-grid-2">
+            <article class="af-card">
+              <h2>Egresos por categoría</h2>
+              <canvas id="chart-expenses-category"></canvas>
+            </article>
+            <article class="af-card">
+              <h2>Ingresos vs egresos por mes</h2>
+              <canvas id="chart-income-expense"></canvas>
+            </article>
+          </div>
+          <article class="af-card">
+            <h2>Top clientes por ganancia</h2>
+            <div id="top-customers-table"></div>
+          </article>
+        </section>
+
+        <section id="view-movimientos" class="af-view" data-view="movimientos">
+          <div id="movimientos-totals" class="af-kpi-grid"></div>
+
+          <div class="af-row-actions">
+            <button type="button" id="open-add-transaction-modal">Añadir movimiento</button>
+          </div>
+
+          <div class="af-card af-table-wrap">
+            <table class="af-table" id="transactions-table">
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Cliente</th>
+                  <th>Categoría</th>
+                  <th>Monto</th>
+                  <th>Fecha</th>
+                  <th>Detalle</th>
+                  <th>Método</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="af-pagination" id="transactions-pagination"></div>
+        </section>
+
+        <section id="view-clientes" class="af-view" data-view="clientes">
+          <div class="af-grid-2">
+            <article class="af-card">
+              <h2>Nuevo cliente</h2>
+              <form id="customer-form" class="af-form-grid">
+                <input id="customer-name" type="text" placeholder="Nombre" required maxlength="255">
+                <textarea id="customer-notes" placeholder="Notas" maxlength="5000"></textarea>
+                <button type="submit">Guardar cliente</button>
+              </form>
+            </article>
+
+            <article class="af-card" id="customer-detail-card">
+              <h2>Detalle de cliente</h2>
+              <p id="customer-detail-empty">Seleccioná un cliente para ver métricas.</p>
+              <div id="customer-detail-content" class="af-hidden">
+                <div id="customer-detail-kpis" class="af-kpi-grid"></div>
+                <canvas id="chart-customer-balance"></canvas>
+                <div id="customer-detail-transactions"></div>
+              </div>
+            </article>
+          </div>
+
+          <article class="af-card af-table-wrap">
+            <table class="af-table" id="customers-table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Notas</th>
+                  <th>Ingresos</th>
+                  <th>Egresos</th>
+                  <th>Balance</th>
+                  <th>Movimientos</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </article>
+        </section>
+
+        <section id="view-categorias" class="af-view" data-view="categorias">
+          <div class="af-grid-2">
+            <article class="af-card">
+              <h2>Nueva categoría</h2>
+              <form id="category-form" class="af-form-grid">
+                <input id="category-name" type="text" placeholder="Nombre" required maxlength="255">
+                <select id="category-type" required>
+                  <option value="both">Ambos</option>
+                  <option value="income">Ingreso</option>
+                  <option value="expense">Egreso</option>
+                </select>
+                <button type="submit">Guardar categoría</button>
+              </form>
+            </article>
+
+            <article class="af-card">
+              <h2>Notas</h2>
+              <p>Las categorías tipo <strong>both</strong> pueden usarse para ingresos y egresos.</p>
+            </article>
+          </div>
+
+          <article class="af-card af-table-wrap">
+            <table class="af-table" id="categories-table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Tipo</th>
+                  <th>Movimientos</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </article>
+        </section>
+
+        <section id="view-import-export" class="af-view" data-view="import-export">
+          <div class="af-grid-2">
+            <article class="af-card">
+              <h2>Exportar</h2>
+              <p>Descargá un JSON completo con clientes, categorías y movimientos.</p>
+              <button id="export-json-btn" type="button">Descargar JSON</button>
+            </article>
+
+            <article class="af-card">
+              <h2>Importar JSON</h2>
+              <p>Subí un JSON previamente exportado. Se aplica validación y upsert por UUID.</p>
+              <input id="import-file-input" type="file" accept="application/json,.json">
+              <button id="import-json-btn" type="button">Importar</button>
+            </article>
+          </div>
+
+          <article class="af-card">
+            <h2>Estado de import/export</h2>
+            <pre id="import-export-log" class="af-log"></pre>
+          </article>
+        </section>
+
+        <section id="view-ajustes" class="af-view" data-view="ajustes">
+          <article class="af-card">
+            <h2>Ajustes</h2>
+            <p><strong>API base:</strong> <span id="api-base-label"></span></p>
+            <p><strong>Usuario:</strong> <span id="current-user-label">-</span></p>
+            <p><strong>Tenant:</strong> <span id="current-tenant-label">-</span></p>
+          </article>
+        </section>
+      </main>
+
+      <p id="app-feedback" class="af-feedback" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <dialog id="transaction-modal" class="af-modal">
+    <form id="transaction-form" method="dialog" class="af-modal-form">
+      <h2>Añadir movimiento</h2>
+
+      <label>
+        Tipo
+        <select id="tx-type" required>
+          <option value="income">Ingreso</option>
+          <option value="expense">Egreso</option>
+        </select>
+      </label>
+
+      <label>
+        Cliente
+        <select id="tx-customer"></select>
+      </label>
+
+      <label>
+        Categoría
+        <select id="tx-category"></select>
+      </label>
+
+      <label>
+        Monto (ARS)
+        <input id="tx-amount" type="number" inputmode="numeric" min="1" required>
+      </label>
+
+      <label>
+        Fecha
+        <input id="tx-date" type="date" required>
+      </label>
+
+      <label>
+        Detalle
+        <textarea id="tx-detail" maxlength="5000"></textarea>
+      </label>
+
+      <label>
+        Método
+        <input id="tx-method" type="text" maxlength="120">
+      </label>
+
+      <div class="af-modal-actions">
+        <button type="submit">Guardar</button>
+        <button type="button" id="close-transaction-modal" class="af-ghost-btn">Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script type="module" src="./app.js?v=202602221329"></script>
+</body>
+
+</html>
